@@ -1,0 +1,56 @@
+/* Dashboard.css */
+
+body {
+    font-family: Arial, sans-serif; /* Set a default font */
+    background-color: #f4f4f4; /* Light background color */
+    margin: 0; /* Remove default margin */
+  }
+  
+  h2 {
+    text-align: center; /* Center align the main heading */
+    margin: 20px 0; /* Margin around the heading */
+    color: #333; /* Dark text color */
+  }
+  
+  .dashboard-card {
+    background-color: white; /* White background for cards */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 20px; /* Padding inside cards */
+    margin: 20px; /* Margin around cards */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: center; /* Center text in cards */
+    transition: transform 0.3s; /* Smooth transform on hover */
+  }
+  
+  .dashboard-card:hover {
+    transform: scale(1.05); /* Slightly scale up on hover */
+  }
+  
+  .dashboard-card h3 {
+    color: #007bff; /* Bootstrap primary color for headings */
+    margin-bottom: 10px; /* Space below headings */
+  }
+  
+  .dashboard-card p {
+    font-size: 24px; /* Larger font size for counts */
+    color: #333; /* Dark text color */
+    margin: 0; /* Remove default margin */
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .dashboard-card {
+      margin: 10px; /* Reduce margin on smaller screens */
+      padding: 15px; /* Reduce padding inside cards */
+    }
+  
+    h2 {
+      font-size: 20px; /* Smaller font size for heading */
+    }
+  
+    .dashboard-card p {
+      font-size: 20px; /* Smaller font size for counts */
+    }
+  }
+  

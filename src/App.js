@@ -13,12 +13,13 @@ import TestimonialsSection from "./trijal-electrikals/TestimonialsSection";
 import ContactSection from "./trijal-electrikals/ContactSection";
 import Footer from "./trijal-electrikals/Footer";
 import Partnership from "./trijal-electrikals/Partnership";
+import AdminPanel from "./components/Admin/Admin"; 
 import Dashboard from "./components/Dashboard/Dashboard";
 import CategoryPage from "./components/Category/Category";
 import ProductPage from "./components/Product/Product";
 import InquiryForm from "./components/Inquiry/InquiryForm";
-import Register from "./auth/RegisterForm";
-import Login from "./auth/LoginForm";
+import Register from "./auth/Register/RegisterForm";
+import Login from "./auth/Login/LoginForm";
 import "./App.css";
 
 // Protected Route component to guard routes that require authentication
@@ -27,6 +28,20 @@ const ProtectedRoute = ({ element }) => {
   return token ? element : <Navigate to="/login" />;
 };
 
+// Main Layout Component for the Home Page
+const MainLayout = () => (
+  <div>
+    <Header />
+    <Partnership />
+    <HeroSection />
+    <AboutSection />
+    <ServicesSection />
+    <TestimonialsSection />
+    <ContactSection />
+    <Footer />
+  </div>
+);
+
 const App = () => {
   return (
     <Router>
@@ -34,41 +49,17 @@ const App = () => {
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
+        
         {/* Home page - available to everyone */}
-        <Route
-          path="/"
-          element={
-            <div>
-              <Header />
-              <Partnership />
-              <HeroSection />
-              <AboutSection />
-              <ServicesSection />
-              <TestimonialsSection />
-              <ContactSection />
-              <Footer />
-            </div>
-          }
-        />
+        <Route path="/" element={<MainLayout />} />
 
         {/* Admin panel routes - Protected */}
-        <Route
-          path="/admin/dashboard"
-          element={<ProtectedRoute element={<Dashboard />} />}
-        />
-        <Route
-          path="/admin/categories"
-          element={<ProtectedRoute element={<CategoryPage />} />}
-        />
-        <Route
-          path="/admin/products"
-          element={<ProtectedRoute element={<ProductPage />} />}
-        />
-        <Route
-          path="/admin/inquiries"
-          element={<ProtectedRoute element={<InquiryForm />} />}
-        />
+        <Route path="/admin" element={<ProtectedRoute element={<AdminPanel />} />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="categories" element={<CategoryPage />} />
+          <Route path="products" element={<ProductPage />} />
+          <Route path="inquiries" element={<InquiryForm />} />
+        </Route>
 
         {/* Redirect any other paths to login */}
         <Route path="*" element={<Navigate to="/login" />} />
