@@ -20,6 +20,8 @@ import InquiryForm from "./components/Inquiry/InquiryForm";
 import Register from "./auth/RegisterForm";
 import Login from "./auth/LoginForm";
 import "./App.css";
+import SmartPannel from "./trijal-electrikals/SmartPannel";
+import HowItWorks from "./trijal-electrikals/HowItWorks";
 
 // Protected Route component to guard routes that require authentication
 const ProtectedRoute = ({ element }) => {
@@ -43,6 +45,8 @@ const App = () => {
               <Header />
               <Partnership />
               <HeroSection />
+              <SmartPannel />
+              <HowItWorks/>
               <AboutSection />
               <ServicesSection />
               <TestimonialsSection />
