@@ -1,0 +1,72 @@
+/* AdminPanel.css */
+
+.admin-panel {
+    display: flex;
+    height: 100vh; /* Full viewport height */
+    background-color: #f4f4f4; /* Light gray background for the panel */
+  }
+  
+  .sidebar {
+    width: 250px; /* Fixed width for sidebar */
+    background-color: #343a40; /* Dark background for sidebar */
+    color: white; /* White text color */
+    padding: 20px; /* Padding inside the sidebar */
+  }
+  
+  .sidebar h2 {
+    text-align: center; /* Center align the header */
+    margin-bottom: 20px; /* Space below the header */
+  }
+  
+  .sidebar ul {
+    list-style-type: none; /* Remove default list style */
+    padding: 0; /* Remove default padding */
+  }
+  
+  .sidebar li {
+    margin: 15px 0; /* Space between items */
+  }
+  
+  .sidebar a {
+    color: white; /* White text color for links */
+    text-decoration: none; /* Remove underline from links */
+    padding: 10px; /* Padding around links */
+    display: block; /* Make links block elements for full clickable area */
+    transition: background 0.3s; /* Smooth transition for background color */
+  }
+  
+  .sidebar a:hover {
+    background-color: #495057; /* Darker background on hover */
+  }
+  
+  .content {
+    flex-grow: 1; /* Take remaining space */
+    padding: 20px; /* Padding inside content area */
+    background-color: white; /* White background for content */
+    overflow-y: auto; /* Scrollable content if it overflows */
+  }
+  
+  h1, h2, h3 {
+    margin: 0 0 15px; /* Margin below headings */
+  }
+  
+  p {
+    line-height: 1.6; /* Improve line height for readability */
+  }
+  
+  /* Add responsiveness */
+  @media (max-width: 768px) {
+    .admin-panel {
+      flex-direction: column; /* Stack sidebar and content on smaller screens */
+    }
+  
+    .sidebar {
+      width: 100%; /* Full width for sidebar on small screens */
+      padding: 15px; /* Reduce padding */
+    }
+  
+    .content {
+      padding: 15px; /* Reduce padding */
+    }
+  }
+  

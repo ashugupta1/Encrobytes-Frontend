@@ -1,36 +1,42 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../Login/Login.css"
 
-const RegisterForm = () => {
+const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8080/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        "http://localhost:8080/api/users/api/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
       const data = await response.json();
 
       if (response.ok) {
-        alert("Registration successful");
-        // Redirect to login after successful registration
-        navigate("/login");
+        // Store the JWT token in localStorage
+        localStorage.setItem("token", data.token);
+
+        // Redirect to the admin panel (Dashboard)
+        navigate("/admin");
       } else {
         alert(data.message);
       }
     } catch (error) {
-      console.error("Error registering:", error);
+      console.error("Error logging in:", error);
     }
   };
 
   return (
-    <form onSubmit={handleRegister}>
-      <h2>Register</h2>
+    <form onSubmit={handleLogin}>
+      <h2>Login</h2>
       <input
         type="email"
         value={email}
@@ -45,12 +51,12 @@ const RegisterForm = () => {
         placeholder="Password"
         required
       />
-      <button type="submit">Register</button>
+      <button type="submit">Login</button>
       <p>
-        Already have an account? <a href="/login">Login</a>
+        Don't have an account? <a href="/register">Register</a>
       </p>
     </form>
   );
 };
 
-export default RegisterForm;
+export default LoginForm;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "../Dashboard/Dashboard.css"
 
 const Dashboard = () => {
   const [counts, setCounts] = useState({ products: 0, categories: 0 });
