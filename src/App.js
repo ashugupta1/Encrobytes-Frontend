@@ -66,8 +66,6 @@ const App = () => {
               <ServicesSection />
               <WhyChooseUs />
               <IndustryAreServing />
-
-              {/* <AboutSection />
               <TestimonialsSection />
               <ContactSection />
               <Footer />

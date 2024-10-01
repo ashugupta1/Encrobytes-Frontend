@@ -20,6 +20,8 @@ const ProductForm = () => {
         const categoryRes = await fetch("http://localhost:8080/api/category");
         const categoriesData = await categoryRes.json();
         setCategories(categoriesData);
+        console.log(categoriesData);
+        
 
         const productRes = await fetch("http://localhost:8080/api/product");
         const productsData = await productRes.json();
@@ -207,22 +209,26 @@ const ProductForm = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((product, index) => (
-                <tr key={product._id}>
-                  <td>{index + 1}</td>
-                  <td>{product.title}</td>
-                  <td>{product.category.name}</td>
-                  <td>{product.description}</td>
-                  <td>
-                    <img src={product.imageUrl} alt={product.title} width="100" />
-                  </td>
-                  <td>
-                    <button onClick={() => handleEdit(product)}>Edit</button>
-                    <button onClick={() => handleDelete(product._id)}>Delete</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {products.map((product, index) => (
+    <tr key={product._id}>
+      <td>{index + 1}</td>
+      <td>{product.title}</td>
+      {/* Access category information from the product's category field */}
+      <td>{product.category?.name || "No Category"}</td> {/* Display category name */}
+      <td>{product.description}</td>
+      <td>
+        {/* Display product image */}
+        <img src={product.imageUrl} alt={product.title} width="100" />
+      </td>
+      <td>
+        <button onClick={() => handleEdit(product)}>Edit</button>
+        <button onClick={() => handleDelete(product._id)}>Delete</button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
+
           </table>
         )}
       </div>
