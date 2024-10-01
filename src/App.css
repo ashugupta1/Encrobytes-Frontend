@@ -87,7 +87,14 @@ footer {
   height: 80vh;
   color: #fff;
 }
-
+.main-why-choose{
+  background-image: url('./trijal-electrikals/Images/Blue.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 80vh;
+  color: #fff;
+  padding: 40px;
+}
 .main-smart-pannel {
   display: flex;
   gap: 5rem;
@@ -114,6 +121,15 @@ footer {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s; 
 }
+.how-box-Choose {
+  background-color: rgb(47, 54, 94);
+  margin: 1rem;
+  padding: 2rem;
+  border-radius: 10px;
+  flex: 1; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s; 
+}
 
 .how-box:hover {
   transform: scale(1.05); 
@@ -131,4 +147,14 @@ footer {
 .how-box div:nth-child(2) {
   font-size: 20px; 
   color: #555; 
+}
+#services{
+  margin: 4rem;
+}
+.service-button{
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
 }
