@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../Login/Login.css"
+import "../Login/Login.css";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -36,7 +36,11 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleLogin}>
-      <h2>Login</h2>
+      <div className="container">
+      <div className="login">
+        <h2>Login</h2>
+      </div>
+      <div className="input">
       <input
         type="email"
         value={email}
@@ -44,6 +48,8 @@ const LoginForm = () => {
         placeholder="Email"
         required
       />
+      </div>
+      <div className="input">
       <input
         type="password"
         value={password}
@@ -51,10 +57,16 @@ const LoginForm = () => {
         placeholder="Password"
         required
       />
+      </div>
+      <div className="button">
       <button type="submit">Login</button>
+      </div>
+      <div className="register">
       <p>
         Don't have an account? <a href="/register">Register</a>
       </p>
+        </div>
+        </div>
     </form>
   );
 };

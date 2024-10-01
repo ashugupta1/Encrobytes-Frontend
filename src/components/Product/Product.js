@@ -1,207 +1,233 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
-const ProductPage = () => {
-  const [products, setProducts] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    serialNumber: "",
-    name: "",
-    category: "",
-    image: null,
-  });
-  const [editMode, setEditMode] = useState(false);
-  const [editProductId, setEditProductId] = useState(null);
+const ProductForm = () => {
   const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [editMode, setEditMode] = useState(false); // Track edit mode
+  const [editingProductId, setEditingProductId] = useState(null); // Track the product being edited
 
-  // Fetch products on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const productResponse = await axios.get(
-          "http://localhost:8080/api/product"
-        );
-        setProducts(productResponse.data);
+        const categoryRes = await fetch("http://localhost:8080/api/category");
+        const categoriesData = await categoryRes.json();
+        setCategories(categoriesData);
 
-        const categoryResponse = await axios.get(
-          "http://localhost:8080/api/category"
-        );
-        setCategories(categoryResponse.data);
+        const productRes = await fetch("http://localhost:8080/api/product");
+        const productsData = await productRes.json();
+        setProducts(productsData);
       } catch (err) {
-        console.error(err);
+        setError("Failed to fetch data. Please try again later.");
       }
     };
 
     fetchData();
   }, []);
 
-  // Handle input change
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "image") {
-      setFormData({ ...formData, image: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    setImagePreview(URL.createObjectURL(file)); // Preview the selected image
   };
 
-  // Handle form submission (Add or Edit)
+  const resetForm = () => {
+    setTitle("");
+    setCategory("");
+    setDescription("");
+    setImage(null);
+    setImagePreview(null);
+    setEditMode(false);
+    setEditingProductId(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = new FormData();
-    form.append("serialNumber", formData.serialNumber);
-    form.append("name", formData.name);
-    form.append("category", formData.category);
-    if (formData.image) {
-      form.append("image", formData.image);
-    }
+    setLoading(true);
+    setError("");
+
+    const formData = new FormData();
+    formData.append("category", category);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("image", image);
 
     try {
-      if (editMode) {
-        // If edit mode is on, update the existing product
-        await axios.put(
-          `http://localhost:8080/api/product/${editProductId}`,
-          form,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
-        alert("Product updated successfully");
-        setEditMode(false);
-        setEditProductId(null);
-      } else {
-        // Otherwise, add a new product
-        await axios.post("http://localhost:8080/api/product", form, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        alert("Product added successfully");
+      const url = editMode
+        ? `http://localhost:8080/api/product/${editingProductId}`
+        : "http://localhost:8080/api/product";
+
+      const response = await fetch(url, {
+        method: editMode ? "PUT" : "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to process product.");
       }
 
-      setShowForm(false);
-      setFormData({ serialNumber: "", name: "", category: "", image: null });
+      if (editMode) {
+        // Update product in the state
+        setProducts((prevProducts) =>
+          prevProducts.map((prod) =>
+            prod._id === editingProductId ? data.updatedProduct : prod
+          )
+        );
+        alert("Product updated successfully.");
+      } else {
+        setProducts([...products, data.newProduct]); // Add new product
+        alert("Product added successfully.");
+      }
 
-      // Refresh products
-      const updatedProducts = await axios.get(
-        "http://localhost:8080/api/product"
-      );
-      setProducts(updatedProducts.data);
+      resetForm();
+      setShowForm(false); // Hide the form after submission
     } catch (err) {
-      console.error(err);
-      alert("Error adding/updating product");
+      setError(err.message || "An error occurred while processing the product.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Handle product deletion
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:8080/api/product/${id}`);
-      alert("Product deleted successfully");
-      setProducts(products.filter((product) => product._id !== id));
-    } catch (err) {
-      console.error(err);
-      alert("Error deleting product");
-    }
-  };
-
-  // Handle product editing
   const handleEdit = (product) => {
-    setFormData({
-      serialNumber: product.serialNumber,
-      name: product.name,
-      category: product.category,
-      image: null, // We'll upload a new image if needed
-    });
-    setEditMode(true);
-    setEditProductId(product._id);
+    setTitle(product.title);
+    setCategory(product.category._id);
+    setDescription(product.description);
+    setImagePreview(product.imageUrl);
     setShowForm(true);
+    setEditMode(true);
+    setEditingProductId(product._id); // Set product ID for editing
+  };
+
+  const handleDelete = async (productId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/product/${productId}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete product.");
+      }
+
+      setProducts(products.filter((prod) => prod._id !== productId)); // Remove from state
+      alert("Product deleted successfully.");
+    } catch (err) {
+      console.error("Failed to delete product", err);
+    }
   };
 
   return (
     <div>
-      <h2>Product Page</h2>
-      <button onClick={() => setShowForm(!showForm)}>Add Product</button>
+      <h1>Product Management</h1>
 
+      {/* Toggle Form Button */}
+      <button onClick={() => setShowForm(!showForm)}>
+        {showForm ? "Hide Form" : "Add Product"}
+      </button>
+
+      {/* Conditionally Render Form */}
       {showForm && (
         <form onSubmit={handleSubmit}>
+          <h2>{editMode ? "Edit Product" : "Add New Product"}</h2>
+          {error && <p style={{ color: "red" }}>{error}</p>}
           <div>
-            <label>Serial Number:</label>
-            <input
-              type="text"
-              name="serialNumber"
-              value={formData.serialNumber}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>Name:</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label>Category:</label>
+            <label>Select Category:</label>
             <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
               required
             >
-              <option value="">Select Category</option>
-              {categories.map((category) => (
-                <option key={category._id} value={category.name}>
-                  {category.name}
+              <option value="">Select a category</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.name}
                 </option>
               ))}
             </select>
           </div>
           <div>
-            <label>Image:</label>
-            <input type="file" name="image" onChange={handleChange} />
+            <label>Title:</label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
           </div>
-          <button type="submit">{editMode ? "Update" : "Submit"}</button>
+          <div>
+            <label>Description:</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            ></textarea>
+          </div>
+          <div>
+            <label>Image:</label>
+            <input type="file" onChange={handleImageChange} />
+            {imagePreview && (
+              <img src={imagePreview} alt="Preview" width="100" />
+            )}
+          </div>
+          <button type="submit" disabled={loading}>
+            {loading
+              ? editMode
+                ? "Updating Product..."
+                : "Adding Product..."
+              : editMode
+              ? "Update Product"
+              : "Add Product"}
+          </button>
         </form>
       )}
 
-      <table>
-        <thead>
-          <tr>
-            <th>Serial Number</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Image</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product) => (
-            <tr key={product._id}>
-              <td>{product.serialNumber}</td>
-              <td>{product.name}</td>
-              <td>{product.category}</td>
-              <td>
-                <img
-                  src={`http://localhost:8080${product.imageUrl}`} // Assuming the backend returns the image URL
-                  alt={product.name}
-                  width="50"
-                />
-              </td>
-              <td>
-                <button onClick={() => handleEdit(product)}>Edit</button>
-                <button onClick={() => handleDelete(product._id)}>
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Structured Product List */}
+      <div>
+        <h2>Product List</h2>
+        {products.length === 0 ? (
+          <p>No products available</p>
+        ) : (
+          <table border="1" cellPadding="10" cellSpacing="0">
+            <thead>
+              <tr>
+                <th>Serial No.</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Image</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product, index) => (
+                <tr key={product._id}>
+                  <td>{index + 1}</td>
+                  <td>{product.title}</td>
+                  <td>{product.category.name}</td>
+                  <td>{product.description}</td>
+                  <td>
+                    <img src={product.imageUrl} alt={product.title} width="100" />
+                  </td>
+                  <td>
+                    <button onClick={() => handleEdit(product)}>Edit</button>
+                    <button onClick={() => handleDelete(product._id)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 };
 
-export default ProductPage;
+export default ProductForm;

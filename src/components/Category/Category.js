@@ -47,13 +47,29 @@ const CategoryPage = () => {
     }
 
     try {
-      await axios.post("http://localhost:8080/api/category", form, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      alert("Category added successfully!");
+      if (editMode) {
+        // Update existing category
+        await axios.put(
+          `http://localhost:8080/api/category/${editCategoryId}`,
+          form,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+        alert("Category updated successfully!");
+      } else {
+        // Add new category
+        await axios.post("http://localhost:8080/api/category", form, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        alert("Category added successfully!");
+      }
 
       // Reset form and reload categories
-      setFormData({ name: "", image: null });
+      setFormData({ serialNumber: "", name: "", image: null });
+      setEditMode(false);
+      setEditCategoryId(null);
+      setShowForm(false); // Hide the form after submission
       fetchCategories();
     } catch (error) {
       console.error("Error submitting category:", error);
@@ -88,20 +104,12 @@ const CategoryPage = () => {
   return (
     <div>
       <h2>Category Page</h2>
-      <button onClick={() => setShowForm(!showForm)}>Add Category</button>
+      <button onClick={() => setShowForm(!showForm)}>
+        {showForm ? "Cancel" : "Add Category"}
+      </button>
 
       {showForm && (
         <form onSubmit={handleSubmit}>
-          {/* <div>
-            <label>Serial Number:</label>
-            <input
-              type="number"
-              name="serialNumber"
-              value={formData.serialNumber}
-              onChange={handleChange}
-              required
-            />
-          </div> */}
           <div>
             <label>Name:</label>
             <input

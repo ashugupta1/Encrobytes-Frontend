@@ -8,13 +8,13 @@ const AdminPanel = () => {
     // Clear token from localStorage
     localStorage.removeItem("token");
     // Redirect to the login page
-    navigate("/login");
+    navigate("/");
   };
 
   return (
     <div className="admin-panel">
       <nav className="sidebar">
-        <h2>Admin Panel</h2>
+        <h2 style={{ color: "white" }}>Admin Panel</h2>
         <ul>
           <li>
             <Link to="/admin/dashboard">Dashboard</Link>

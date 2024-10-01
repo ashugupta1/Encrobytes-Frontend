@@ -1,0 +1,114 @@
+/* General styling for the container */
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  /* Styling for the login header */
+  .login h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  /* Styling for input fields */
+  .input {
+    margin-bottom: 20px;
+  }
+  
+  .input input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .input input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  /* Styling for the login button */
+  .button {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .button button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  
+  .button button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Styling for the register link */
+  .register p {
+    text-align: center;
+    font-size: 1rem;
+  }
+  
+  .register a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .register a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive styles */
+  
+  /* For tablets (max-width: 768px) */
+  @media (max-width: 768px) {
+    .container {
+      padding: 15px;
+    }
+  
+    .login h2 {
+      font-size: 1.8rem;
+    }
+  
+    .button button {
+      font-size: 1rem;
+    }
+  }
+  
+  /* For mobile devices (max-width: 480px) */
+  @media (max-width: 480px) {
+    .container {
+      padding: 10px;
+    }
+  
+    .login h2 {
+      font-size: 1.5rem;
+    }
+  
+    .input input {
+      font-size: 0.9rem;
+      padding: 10px;
+    }
+  
+    .button button {
+      font-size: 0.9rem;
+      padding: 10px;
+    }
+  
+    .register p {
+      font-size: 0.9rem;
+    }
+  }
+  

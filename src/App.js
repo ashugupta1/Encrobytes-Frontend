@@ -60,10 +60,14 @@ const App = () => {
               <Header />
               <Partnership />
               <HeroSection />
+              <SmartPannel />
+              <HowItWorks />
               <AboutSection />
               <ServicesSection />
               <TestimonialsSection />
               <ContactSection />
+              
+              {/* <MainLayout /> */}
               <Footer />
             </div>
           }

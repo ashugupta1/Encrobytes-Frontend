@@ -33,7 +33,12 @@ const RegisterForm = () => {
 
   return (
     <form onSubmit={handleRegister}>
+  <div className="container">
+    <div className="register-header">
       <h2>Register</h2>
+    </div>
+
+    <div className="input">
       <input
         type="email"
         value={email}
@@ -41,6 +46,9 @@ const RegisterForm = () => {
         placeholder="Email"
         required
       />
+    </div>
+
+    <div className="input">
       <input
         type="password"
         value={password}
@@ -48,11 +56,19 @@ const RegisterForm = () => {
         placeholder="Password"
         required
       />
+    </div>
+
+    <div className="button">
       <button type="submit">Register</button>
+    </div>
+
+    <div className="login-link">
       <p>
         Already have an account? <a href="/login">Login</a>
       </p>
-    </form>
+    </div>
+  </div>
+</form>
   );
 };
 
